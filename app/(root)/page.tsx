@@ -7,14 +7,14 @@ import Image from "next/image";
 import { Brain, BarChart2, Pencil, Bot, Search } from "lucide-react";
 
 export default async function Home({
-  searchParams,
+  // searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  // searchParams: { [key: string]: string | undefined };
 }) {
   try {
     // Fetch the posts and current user concurrently
 
-    const [result, user] = await Promise.all([fetchPosts(searchParams.page? +searchParams.page : 1, 30), currentUser()]);
+    // const [result, user] = await Promise.all([fetchPosts(searchParams.page? +searchParams.page : 1, 30), currentUser()]);
     const topRatedAgents = [
       { name: "Agent Name 1", rating: 4.8, icon: "🧑‍💻" },
       { name: "Agent Name 2", rating: 4.7, icon: "📊" },
