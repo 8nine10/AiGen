@@ -64,38 +64,36 @@ export async function fetchUser(userId: string) {
     }
 }
 
+
 export async function fetchUserPosts(userId: string) {
-  try {
-    await connectToDB();
-
-    const threads = await User.findOne({ id: userId })
-      .populate({
-        path: 'threads',
-        model: Thread,
-        select: 'text author community createdAt parentId children likes agentName aimodel', // ✅ Include fields
-        populate: [
-          {
-            path: 'children',
-            model: Thread,
-            populate: {
-              path: 'author',
-              model: User,
-              select: 'name image id username'
-            }
-          },
-          {
-            path: 'likes',
-            model: User,
-            select: 'id',
-          },
-        ]
-      });
-
-    return threads;
-  } catch (error: any) {
-    console.log(`Failed to fetch posts: ${error.message}`);
-    throw new Error(`Failed to fetch posts: ${error.message}`);
-  }
+    try {
+        await connectToDB();
+        const threads = await User.findOne({ id: userId})
+            .populate({
+                path: 'threads',
+                model: Thread,
+                populate: [
+                    {
+                        path: 'children',
+                        model: Thread,
+                        populate: {
+                            path: 'author',
+                            model: User,
+                            select: 'name image id username'
+                        }
+                    },
+                    {
+                        path: 'likes',
+                        model: User,
+                        select: 'id',
+                    },
+                ]
+            })
+        return threads;
+    } catch (error: any) {
+        console.log(`Failed to fetch posts: ${error.message}`);
+        throw new Error(`Failed to fetch posts: ${error.message}`);
+    }
 }
 
 

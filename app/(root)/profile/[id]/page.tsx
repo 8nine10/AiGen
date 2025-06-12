@@ -16,7 +16,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
         currentUser(),
         fetchUser(params.id)
     ]);
-    
+    console.log(userInfo);
     if (!user) return null;
 
     if (!userInfo?.onboarded) redirect('/onboarding');
@@ -53,7 +53,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
                         ))}
                     </TabsList>
                     {profileTabs.map((tab) => (<>
-                        {tab.label === 'Threads' && <TabsContent key={`content-${tab.label}`} value={tab.value} className="w-full text-light-1">
+                        {tab.label === 'Posts' && <TabsContent key={`content-${tab.label}`} value={tab.value} className="w-full text-light-1">
                             <ThreadsTab 
                                 currentUserId={user.id}
                                 accountId={userInfo.id}

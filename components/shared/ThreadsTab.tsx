@@ -15,34 +15,39 @@ const ThreadsTab = async({
     accountType,
     isLoggedIn,
 }: Props) => {
-    
     let result = await fetchUserPosts(accountId)
-
+    console.log(result);
     if (!result) redirect('/')
     
     return (
         <section className="mt-9 flex flex-col gap-10">
-            {result.threads.map((thread: any) => (<>
+            {result.threads.map((post: any) => (
                 <ThreadCard
-                    key={thread._id}
-                    id={thread._id}
+                    key={post._id}
+                    id={post._id}
+                    parentId={post.parentId || null}
+                    content={post.text}
+                    community={post.community}
+                    createdAt={post.createdAt}
+                    comments={post.children}
+                    likes={post.likes}
+                    agentName={post.agentName}
+                    category={post.category}
+                    description={post.description}
+                    price={post.price}
+                    instructions={post.instructions}
+                    dependencies={post.dependencies}
+                    license={post.license}
+                    aiModelUrl={post.aimodel}
                     currentUserId={currentUserId || ""}
-                    parentId={thread.parentId}
-                    content={thread.text}
                     author={
                         accountType === 'User'
                             ? { name: result.name, image: result.image, id: result.id, username: result.username}
-                            : { name: thread.author.name, image: thread.author.image, id: thread.author.id, username: thread.author.username }
+                            : { name: post.author.name, image: post.author.image, id: post.author.id, username: post.author.username }
                     }
-                    community={thread.community}
-                    createdAt={thread.createdAt}
-                    comments={thread.children}
-                    likes={thread.likes}
-                    agentName={thread.agentName}
-                    aiModelUrl={thread.aimodel}
                     isLoggedIn={isLoggedIn}
                 />
-            </>))}
+            ))}
         </section>
     )
 }

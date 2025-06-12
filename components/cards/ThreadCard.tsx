@@ -32,6 +32,12 @@ interface Props {
     isLoggedIn?: boolean;
     agentName?: string;
     aiModelUrl?: string;
+    category: string;
+    description: string;
+    price: string;
+    instructions: string;
+    dependencies: string;
+    license: string;
 }
 
 const ThreadCard = ({
@@ -47,7 +53,13 @@ const ThreadCard = ({
     likes,
     isLoggedIn,
     agentName,
-    aiModelUrl
+    aiModelUrl,
+    category,
+    description,
+    price,
+    instructions,
+    dependencies,
+    license
 }: Props) => {
     return (
         <article className={`flex w-full flex-col rounded-xl ${isComment ? 'px-0 xs:px-7' : 'bg-dark-2 p-7'}`}>
@@ -69,22 +81,16 @@ const ThreadCard = ({
                         <Link href={`/profile/${author.id}`}>
                             <h4 className="cursor-pointer text-base-semibold text-light-1">{author.name}</h4>
                             <h4 className="cursor-pointer text-small-regular text-light-4">@{author.username}</h4>
+                            <h4 className="cursor-pointer text-heading3-bold text-light-1">{agentName}</h4>
+                            <h4 className="cursor-pointer text-heading4-medium text-light-1">{category}</h4>
                         </Link>
-                        <p className="mt-2 text-base-semibold text-light-1">
-                            Agent Name: {agentName || "N/A"}
-                            </p>
-
-                            {aiModelUrl && (
-                            <a
-                                href={aiModelUrl}
-                                download
-                                className="mt-1 w-fit rounded-md bg-primary-500 px-4 py-1 text-white text-sm hover:bg-primary-600 transition"
-                            >
-                                Download AI Model
-                            </a>
-                            )}
+                        <p className="mt-2 text-base-semibold text-light-2">{description}</p>
+                        <p className="mt-2 text-small-regular text-light-2">Price : {price}</p>
+                        <p className="mt-2 text-small-regular text-light-2">Instructions: {instructions}</p>
+                        <p className="mt-2 text-small-regular text-light-2">Dependencies: {dependencies}</p>
+                        <p className="mt-2 text-tiny-medium text-light-2">License: {license}</p>
                         <div className={`${isComment && 'mb-10'} mt-5 flex flex-col gap-3`}>
-                            {/* <div className="flex gap-3.5">
+                            <div className="flex gap-3.5">
                                 <LikeThread
                                     threadId={JSON.stringify(id)}
                                     currentUserId={currentUserId}
@@ -97,7 +103,7 @@ const ThreadCard = ({
                                 </Link> 
                                 <Image src='/assets/repost.svg' alt='repost' width={24} height={24} className="cursor-pointer object-contain"/>
                                 <Image src='/assets/share.svg' alt='share' width={24} height={24} className="cursor-pointer object-contain"/>
-                            </div> */}
+                            </div>
                             {isComment && comments.length > 0 && (
                                 <Link href={`/thread/${id}`}>
                                     <p className="mt-1 text-subtle-medium text-gray-1">

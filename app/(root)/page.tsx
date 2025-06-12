@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import ThreadCard from "@/components/cards/ThreadCard";
 import Pagination from "@/components/shared/Pagination";
 import Card from "@/components/Card";
@@ -7,14 +9,15 @@ import Image from "next/image";
 import { Brain, BarChart2, Pencil, Bot, Search } from "lucide-react";
 
 export default async function Home({
-  // searchParams,
+  searchParams,
 }: {
-  // searchParams: { [key: string]: string | undefined };
+  searchParams: { [key: string]: string | undefined };
 }) {
   try {
     // Fetch the posts and current user concurrently
 
-    // const [result, user] = await Promise.all([fetchPosts(searchParams.page? +searchParams.page : 1, 30), currentUser()]);
+    const [result, user] = await Promise.all([fetchPosts(searchParams.page? +searchParams.page : 1, 30), currentUser()]);
+
     const topRatedAgents = [
       { name: "Agent Name 1", rating: 4.8, icon: "🧑‍💻" },
       { name: "Agent Name 2", rating: 4.7, icon: "📊" },
@@ -29,43 +32,10 @@ export default async function Home({
       { label: "Code Helpers", icon: "</>" },
     ];
     // Render the component
-    // return (
-    //   <>
-    //     <h1 className="head-text text-left">Home</h1>
-    //     <section className="mt-9 flex flex-col gap-10">
-    //       {result.posts.length === 0 ? (
-    //         <p className="no-result">No Comments found</p>
-    //       ) : (
-    //         result.posts.map((post) => {
-    //           if (post.parentId === null) {
-    //             return (
-    //               <ThreadCard
-    //                 key={post._id}
-    //                 id={post._id}
-    //                 currentUserId={user?.id || ""}
-    //                 parentId={post.parentId || null}
-    //                 content={post.text}
-    //                 author={post.author}
-    //                 community={post.community}
-    //                 createdAt={post.createdAt}
-    //                 comments={post.children}
-    //                 likes={post.likes}
-    //                 isLoggedIn={user ? true : false}
-    //               />
-    //             )
-    //           }
-    //         })
-    //       )}
-    //     </section>
-    //     <Pagination
-    //       path='/'
-    //       pageNumber={searchParams?.page ? +searchParams.page : 1}
-    //       isNext={result.isNext}
-    //     />
-    //   </>
-    // );
     return (
+      <>
       <main className="p-8 bg-black min-h-screen text-white space-y-12">
+        <h1 className="head-text text-left">Home</h1>
         {/* Hero Section */}
         <section className="text-center space-y-4">
           <h1 className="text-4xl font-bold">Welcome to AiGen</h1>
@@ -129,34 +99,47 @@ export default async function Home({
           </div>
         </section>
       </main>
+        <section className="mt-9 flex flex-col gap-10">
+          <h2 className="text-2xl font-bold mb-4">All Model</h2>
+          {result.posts.length === 0 ? (
+            <p className="no-result">No Comments found</p>
+          ) : (
+            result.posts.map((post) => {
+              if (post.parentId === null) {
+                return (
+                  <ThreadCard
+                    key={post._id}
+                    id={post._id}
+                    currentUserId={user?.id || ""}
+                    parentId={post.parentId || null}
+                    content={post.text}
+                    author={post.author}
+                    community={post.community}
+                    createdAt={post.createdAt}
+                    comments={post.children}
+                    likes={post.likes}
+                    isLoggedIn={user ? true : false}
+                    agentName={post.agentName}
+                    category={post.category}
+                    description={post.description}
+                    price={post.price}
+                    instructions={post.instructions}
+                    dependencies={post.dependencies}
+                    license={post.license}
+                    aiModelUrl={post.aimodel}
+                  />
+                )
+              }
+            })
+          )}
+        </section>
+        <Pagination
+          path='/'
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result.isNext}
+        />
+      </>
     );
-  // <div className="p-6 bg-black min-h-screen text-white">
-  //   <h2 className="text-2xl font-bold mb-4">Top Rated</h2>
-  //   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-  //     {topRatedAgents.map((agent, index) => (
-  //       <Card
-  //         key={index}
-  //         title={agent.name}
-  //         rating={agent.rating}
-  //         icon={agent.icon}
-  //         gradient
-  //       />
-  //     ))}
-  //   </div>
-
-  //   <h2 className="text-2xl font-bold mb-4">Featured Categories</h2>
-  //   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-  //     {featuredCategories.map((category, index) => (
-  //       <Card
-  //         key={index}
-  //         title={category.label}
-  //         icon={category.icon}
-  //         rating={null}
-  //         dark
-  //       />
-  //     ))}
-  //   </div>
-  // </div>
   } catch (error) {
     console.error("Error fetching data:", error);
     return (
