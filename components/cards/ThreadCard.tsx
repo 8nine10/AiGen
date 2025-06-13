@@ -98,9 +98,17 @@ const ThreadCard = ({
                                     likeCount={likes.length}
                                     isLoggedIn={isLoggedIn}
                                 />
-                                <Link href={`/thread/${id}`}>
-                                    <Image src='/assets/reply.svg' alt='reply' width={24} height={24} className="cursor-pointer object-contain"/>
-                                </Link> 
+                                {aiModelUrl && (
+                                    <a href={aiModelUrl} download className="cursor-pointer">
+                                        <Image
+                                            src='/assets/file-arrow-down-solid.svg'
+                                            alt='download'
+                                            width={16}
+                                            height={16}
+                                            className="object-contain"
+                                        />
+                                    </a>
+                                )}
                                 <Image src='/assets/repost.svg' alt='repost' width={24} height={24} className="cursor-pointer object-contain"/>
                                 <Image src='/assets/share.svg' alt='share' width={24} height={24} className="cursor-pointer object-contain"/>
                             </div>
