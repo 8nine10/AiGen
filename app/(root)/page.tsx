@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import ThreadCard from "@/components/cards/ThreadCard";
 import Pagination from "@/components/shared/Pagination";
 import Card from "@/components/Card";
-import { fetchPosts } from "@/lib/actions/thread.actions";
+import { fetchPosts, fetchTopPosts } from "@/lib/actions/thread.actions";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import { Brain, BarChart2, Pencil, Bot, Search } from "lucide-react";
@@ -16,7 +16,7 @@ export default async function Home({
   try {
     // Fetch the posts and current user concurrently
 
-    const [result, user] = await Promise.all([fetchPosts(searchParams.page? +searchParams.page : 1, 30), currentUser()]);
+    const [result, topPost, user] = await Promise.all([fetchPosts(searchParams.page? +searchParams.page : 1, 30), fetchTopPosts() ,currentUser()]);
 
     const topRatedAgents = [
       { name: "Agent Name 1", rating: 4.8, icon: "🧑‍💻" },
@@ -78,7 +78,7 @@ export default async function Home({
         </section>
 
         {/* Top Rated */}
-        <section>
+        {/* <section>
           <h2 className="text-2xl font-bold mb-4">Top Rated</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card title="Agent Name 1" icon="🤖" rating={4.8} bgColor="bg-gradient-to-br from-pink-500 to-red-500"/>
@@ -86,6 +86,40 @@ export default async function Home({
             <Card title="Agent Name 3" icon="✏️" rating={4.6} bgColor="bg-gradient-to-br from-pink-500 to-red-500"/>
             <Card title="Agent Name 4" icon="🧠" rating={4.5} bgColor="bg-gradient-to-r from-green-400 to-emerald-500"/>
           </div>
+        </section> */}
+        <section className="mt-9 flex flex-col gap-10">
+          <h2 className="text-2xl font-bold mb-4">Top Rated</h2>
+          {topPost.posts.length === 0 ? (
+            <p className="no-result">No Agents found</p>
+          ) : (
+            topPost.posts.map((post) => {
+              if (post.parentId === null) {
+                return (
+                  <ThreadCard
+                    key={post._id}
+                    id={post._id}
+                    currentUserId={user?.id || ""}
+                    parentId={post.parentId || null}
+                    content={post.text}
+                    author={post.author}
+                    community={post.community}
+                    createdAt={post.createdAt}
+                    comments={post.children}
+                    likes={post.likes}
+                    isLoggedIn={user ? true : false}
+                    agentName={post.agentName}
+                    category={post.category}
+                    description={post.description}
+                    price={post.price}
+                    instructions={post.instructions}
+                    dependencies={post.dependencies}
+                    license={post.license}
+                    aiModelUrl={post.aimodel}
+                  />
+                )
+              }
+            })
+          )}
         </section>
 
         {/* Featured Categories */}
@@ -100,9 +134,9 @@ export default async function Home({
         </section>
       </main>
         <section className="mt-9 flex flex-col gap-10">
-          <h2 className="text-2xl font-bold mb-4">All Model</h2>
+          <h1 className="head-text text-left">All Model</h1>
           {result.posts.length === 0 ? (
-            <p className="no-result">No Comments found</p>
+            <p className="no-result">No Model found</p>
           ) : (
             result.posts.map((post) => {
               if (post.parentId === null) {

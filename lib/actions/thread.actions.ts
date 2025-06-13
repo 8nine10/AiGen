@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { connectToDB } from "../mongoose"
+import { PipelineStage } from "mongoose";
 
 import Thread from "../models/thread.model";
 import User from "../models/user.model";
@@ -60,6 +61,77 @@ export async function createThread({
     throw new Error(`Error in creating thread: ${error.message}`);
   }
 }
+
+
+export async function fetchTopPosts(pageNumber = 1, pageSize = 4) {
+  try {
+    await connectToDB();
+
+    const skipAmount = (pageNumber - 1) * pageSize;
+
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          parentId: { $in: [null, undefined] },
+        },
+      },
+      {
+        $addFields: {
+          likeCount: { $size: "$likes" },
+        },
+      },
+      {
+        $sort: { likeCount: -1 },
+      },
+      {
+        $skip: skipAmount,
+      },
+      {
+        $limit: pageSize,
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $unwind: "$author",
+      },
+      {
+        $lookup: {
+          from: "threads",
+          localField: "children",
+          foreignField: "_id",
+          as: "children",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "likes",
+          foreignField: "_id",
+          as: "likes",
+        },
+      },
+    ];
+
+    const posts = await Thread.aggregate(pipeline);
+    const totalPostsCount = await Thread.countDocuments({
+      parentId: { $in: [null, undefined] },
+    });
+
+    const isNext = totalPostsCount > skipAmount + posts.length;
+
+    return { posts, isNext };
+  } catch (error: any) {
+    console.log(`Error in fetching posts: ${error.message}`);
+    throw new Error(`Error in fetching posts: ${error.message}`);
+  }
+}
+
 
 
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
