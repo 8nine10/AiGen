@@ -16,7 +16,7 @@ async function Page() {
     return (
         <>
             <h1 className="head-text">Submit your AI agents</h1>
-            <h1 className="head-text">Share your AI agent with the world and start earning.</h1>
+            <h1 className="body-semibold text-light-2">Share your AI agent with the world and start earning.</h1>
             <PostThread userId={JSON.stringify(userInfo._id)} />
         </>
     )

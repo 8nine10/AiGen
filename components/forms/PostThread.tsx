@@ -145,13 +145,13 @@ function PostThread({ userId }: { userId: string }) {
               <FormLabel className="text-base-semibold text-light-2">Category</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
+                  <SelectTrigger className="text-light-2">
+                    <SelectValue  placeholder="Select a category" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
+                <SelectContent className="text-light-2 bg-dark-2">
                   {["Data Analysis", "Image Generation", "Code Helper", "Text Processing", "Productivity", "Creative", "Education", "Others"].map(c => (
-                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                    <SelectItem key={c} value={c} className="hover:bg-primary-500">{c}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -177,11 +177,13 @@ function PostThread({ userId }: { userId: string }) {
           name="aimodel"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base-semibold text-light-2">AI Model</FormLabel>
+              <FormLabel className="text-base-semibold text-light-2">Upload AI Model</FormLabel>
               <FormControl>
                 <Input
                   type="file"
                   accept="*"
+                  placeholder="click to upload"
+                  className="text-light-2"
                   onChange={(e) => handleFileUpload(e, field.onChange)}
                 />
               </FormControl>
@@ -228,13 +230,13 @@ function PostThread({ userId }: { userId: string }) {
               <FormLabel className="text-base-semibold text-light-2">License</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="text-light-2">
                     <SelectValue placeholder="Select a license" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
+                <SelectContent className="text-light-2 bg-dark-2">
                   {["MIT License", "Apache License 2.0", "GNU GPL v3", "Proprietary(All Rights Reserved)", "Others"].map(l => (
-                    <SelectItem key={l} value={l}>{l}</SelectItem>
+                    <SelectItem key={l} value={l} className="hover:bg-primary-500">{l}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
